@@ -374,12 +374,12 @@ byte parseRGB(
 
   skipWhitespace(message, length, position);
 
-  // Temporary test of colour alias detection. Nasty, replace with a generalised parser
+  /* Temporary test of colour alias detection. Nasty, replace with a generalised parser
+   *   - Only test the first and last character of the colour (as they are unique) to 
+   *     minimise program storage space.
+   */
   if (message[*position] == 'b'
-      && message[*position + 1] == 'l'
-      && message[*position + 2] == 'a'
-      && message[*position + 3] == 'c'
-      && message[*position + 4] == 'k')
+      && message[*position + 4] == 'k') // BLACK
   {
     *rgb = BLACK;
     (*position) += 5;
@@ -388,9 +388,7 @@ byte parseRGB(
   }
 
   if (message[*position] == 'b'
-      && message[*position + 1] == 'l'
-      && message[*position + 2] == 'u'
-      && message[*position + 3] == 'e')
+      && message[*position + 3] == 'e') // BLUE
   {
     *rgb = BLUE;
     (*position) +=4;
@@ -399,10 +397,7 @@ byte parseRGB(
   }
 
   if (message[*position] == 'g'
-      && message[*position + 1] == 'r'
-      && message[*position + 2] == 'e'
-      && message[*position + 3] == 'e'
-      && message[*position + 4] == 'n')
+      && message[*position + 4] == 'n') // GREEN
   {
     *rgb = GREEN;
     (*position) += 5;
@@ -411,11 +406,7 @@ byte parseRGB(
   }
 
   if (message[*position] == 'o'
-      && message[*position + 1] == 'r'
-      && message[*position + 2] == 'a'
-      && message[*position + 3] == 'n'
-      && message[*position + 4] == 'g'
-      && message[*position + 5] == 'e')
+      && message[*position + 5] == 'e') // ORANGE
   {
     *rgb = ORANGE;
     (*position) += 6;
@@ -424,9 +415,7 @@ byte parseRGB(
   }
 
   if (message[*position] == 'p'
-      && message[*position + 1] == 'i'
-      && message[*position + 2] == 'n'
-      && message[*position + 3] == 'k')
+      && message[*position + 3] == 'k') // PINK
   {
     *rgb = PINK;
     (*position) +=4;
@@ -435,11 +424,7 @@ byte parseRGB(
   }
 
   if (message[*position] == 'p'
-      && message[*position + 1] == 'u'
-      && message[*position + 2] == 'r'
-      && message[*position + 3] == 'p'
-      && message[*position + 4] == 'l'
-      && message[*position + 5] == 'e')
+      && message[*position + 5] == 'e') // PURPLE
   {
     *rgb = PURPLE;
     (*position) += 6;
@@ -448,8 +433,7 @@ byte parseRGB(
   }
 
   if (message[*position] == 'r'
-      && message[*position + 1] == 'e'
-      && message[*position + 2] == 'd')
+      && message[*position + 2] == 'd') // RED
   {
     *rgb = RED;
     (*position) += 3;
@@ -458,10 +442,7 @@ byte parseRGB(
   }
 
   if (message[*position] == 'w'
-      && message[*position + 1] == 'h'
-      && message[*position + 2] == 'i'
-      && message[*position + 3] == 't'
-      && message[*position + 4] == 'e')
+      && message[*position + 4] == 'e') // WHITE
   {
     *rgb = WHITE;
     (*position) += 5;
@@ -470,11 +451,7 @@ byte parseRGB(
   }
 
   if (message[*position] == 'y'
-      && message[*position + 1] == 'e'
-      && message[*position + 2] == 'l'
-      && message[*position + 3] == 'l'
-      && message[*position + 4] == 'o'
-      && message[*position + 5] == 'w')
+      && message[*position + 5] == 'w') // YELLOW
   {
     *rgb = YELLOW;
     (*position) += 6;
