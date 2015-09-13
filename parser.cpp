@@ -99,8 +99,6 @@ byte parseCommandAll(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
-
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeAll(bytecode->u.lit.colorFrom);
@@ -120,9 +118,7 @@ byte parseCommandShift(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parseAxis(message, length, position, & axis);
-  skipWhitespace(message, length, position);
   errorCode = parseDirection(message, length, position, & direction);
 
   if (errorCode == 0) cubeShift(axis, direction);
@@ -143,9 +139,7 @@ byte parseCommandSet(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX, & positionY, & positionZ);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeSet( positionX, positionY, positionZ, bytecode->u.lit.colorFrom);
@@ -169,11 +163,8 @@ byte parseCommandLine(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX1, & positionY1, & positionZ1);
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX2, & positionY2, & positionZ2);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeLine( positionX1, positionY1, positionZ1, positionX2, positionY2, positionZ2, bytecode->u.lit.colorFrom);
@@ -198,19 +189,14 @@ byte parseCommandBox(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX1, & positionY1, & positionZ1);
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX2, & positionY2, & positionZ2);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & style);
   if (errorCode) {
     errorCode = 0;
     style = 0;
   }
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorTo);
   if (errorCode) {
     errorCode = 0;
@@ -236,13 +222,9 @@ byte parseCommandSphere(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX1, & positionY1, & positionZ1);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & size);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorTo);
   if (errorCode) {
     errorCode = 0;
@@ -264,7 +246,6 @@ byte parseCommandNext(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeNext(bytecode->u.lit.colorFrom);
@@ -285,11 +266,8 @@ byte parseCommandCopyplane(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parseAxis(message, length, position, & axis);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & offset);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & destination);
 
   if (errorCode == 0) cubeCopyplane(axis, offset, destination);
@@ -311,13 +289,9 @@ byte parseCommandMoveplane(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parseAxis(message, length, position, & axis);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & offset);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & destination);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & rgb);
 
   if (errorCode == 0) cubeMoveplane(axis, offset, destination, rgb);
@@ -337,11 +311,8 @@ byte parseCommandSetplane(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parseAxis(message, length, position, & axis);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & offset);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeSetplane(axis, offset, bytecode->u.lit.colorFrom);
@@ -393,6 +364,8 @@ byte parseRGB(
   byte digit;
   byte number;
   byte errorCode = 7;
+
+  skipWhitespace(message, length, position);
 
   // Temporary test of colour alias detection. Nasty, replace with a generalised parser
   if ((message[*position] == 'B' || message[*position] == 'b')
@@ -548,6 +521,8 @@ byte parsePosition(
   byte digit;
   byte errorCode = 6;
 
+  skipWhitespace(message, length, position);
+
   if (checkForOffset(message, length, position, & digit)) {
     *positionX = digit;
     (*position) ++;
@@ -576,6 +551,8 @@ byte parseAxis(
   byte digit;
   byte errorCode = 10;
 
+  skipWhitespace(message, length, position);
+
   if (checkForAxis(message, length, position, & digit)) {
     *axis = digit;
     (*position) ++;
@@ -594,6 +571,8 @@ byte parseDirection(
   byte digit;
   byte errorCode = 11;
 
+  skipWhitespace(message, length, position);
+
   if (checkForDirection(message, length, position, & digit)) {
     *direction = digit;
     (*position) ++;
@@ -611,6 +590,8 @@ byte parseOffset(
 
   byte digit;
   byte errorCode = 6;
+
+  skipWhitespace(message, length, position);
 
   if (checkForOffset(message, length, position, & digit)) {
     *offset = digit;
