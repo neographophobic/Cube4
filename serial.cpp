@@ -42,8 +42,8 @@ void Cube::serialBegin(
   }
 
   if (serial) {
-    serial->println("[Cube 1.0]");
-    serial->println("Type 'help;'");
+    serial->println(F("[Cube 1.0]"));
+    serial->println(F("Type 'help;'"));
   }
 }
 

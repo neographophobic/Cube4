@@ -338,25 +338,25 @@ byte parseCommandHelp(
   bytecode->executer = command->executer;
 
   if (serial) {
-    serial->println("  *** Available commands ***");
-    serial->println("Entire cube:");
-    serial->println("  all <colour>;                                        (eg: 'all RED;', or 'all ff0000;')");
-    serial->println("  shift <axis> <direction>;                            (eg: 'shift X +;', or 'shift Y -;')");
-    serial->println("Single LED:");
-    serial->println("  set <location> <colour>;                             (eg: 'set 112 GREEN;', or 'set 112 00ff00;')");
-    serial->println("  next <colour>;                                       (eg: 'next BLUE;', or 'next 0000ff;')");
-    serial->println("One axis:");
-    serial->println("  setplane <axis> <offset> <colour>;                   (eg: 'setplane X 2 BLUE;', or 'setplane Y 1 00ff00;')");
-    serial->println("  copyplane <axis> <from offset> <to offset>;          (eg: 'copyplane X 2 1;')");
-    serial->println("  moveplane <axis> <from offset> <to offset> <colour>; (eg: 'move Z 1 3 BLACK;', or 'move X 3 0 GREEN;')");
-    // Commented out due to taking up an additional 18% memory
-    // serial->println("Graphics and shapes:");
-    // serial->println("  line <location1> <location2> <colour>;                     (eg: 'line 000 333 RED;', or 'line 000 333 ff0000;')");
-    // serial->println("  box <location1> <location2> <colour> (<style:0-4:solid/walls only/edges only/walls filled/edges filled>) (<fill>);  (eg: 'box 000 333 GREEN;', or 'box 000 333 00ff00 3 ffffff;')");
-    // serial->println("  sphere <location1> <location2> <colour> (<fill>);          (eg: 'sphere 000 333 BLUE;', or 'sphere 000 333 0000ff ffffff;')");
-    serial->println("Supported colour aliases:");
-    serial->println("  BLACK BLUE GREEN ORANGE PINK PURPLE RED WHITE YELLOW");
-    serial->println("  *** Please see www.freetronics.com/cube for more information ***");
+    serial->println(F("  *** Available commands ***"));
+    serial->println(F("Entire cube:"));
+    serial->println(F("  all <colour>;                                        (eg: 'all RED;', or 'all ff0000;')"));
+    serial->println(F("  shift <axis> <direction>;                            (eg: 'shift X +;', or 'shift Y -;')"));
+    serial->println(F("Single LED:"));
+    serial->println(F("  set <location> <colour>;                             (eg: 'set 112 GREEN;', or 'set 112 00ff00;')"));
+    serial->println(F("  next <colour>;                                       (eg: 'next BLUE;', or 'next 0000ff;')"));
+    serial->println(F("One axis:"));
+    serial->println(F("  setplane <axis> <offset> <colour>;                   (eg: 'setplane X 2 BLUE;', or 'setplane Y 1 00ff00;')"));
+    serial->println(F("  copyplane <axis> <from offset> <to offset>;          (eg: 'copyplane X 2 1;')"));
+    serial->println(F("  moveplane <axis> <from offset> <to offset> <colour>; (eg: 'move Z 1 3 BLACK;', or 'move X 3 0 GREEN;')"));
+    // Commented out due to taking up an additional 2% program storage space
+    // serial->println(F("Graphics and shapes:"));
+    // serial->println(F("  line <location1> <location2> <colour>;                     (eg: 'line 000 333 RED;', or 'line 000 333 ff0000;')"));
+    // serial->println(F("  box <location1> <location2> <colour> (<style:0-4:solid/walls only/edges only/walls filled/edges filled>) (<fill>);  (eg: 'box 000 333 GREEN;', or 'box 000 333 00ff00 3 ffffff;')"));
+    // serial->println(F("  sphere <location1> <location2> <colour> (<fill>);          (eg: 'sphere 000 333 BLUE;', or 'sphere 000 333 0000ff ffffff;')"));
+    serial->println(F("Supported colour aliases:"));
+    serial->println(F("  BLACK BLUE GREEN ORANGE PINK PURPLE RED WHITE YELLOW"));
+    serial->println(F("  *** Please see www.freetronics.com/cube for more information ***"));
   }
 
   return(errorCode);
