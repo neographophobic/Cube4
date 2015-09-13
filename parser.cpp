@@ -48,6 +48,13 @@ byte parser(
   byte errorCode = 0;
   byte position = 0;
 
+  // Convert the message to lowercase
+  int i = 0;
+  while(message[i]) {
+	  message[i] = tolower(message[i]);
+	  i++;
+  }
+
   skipWhitespace(message, length, & position);
 
   command_t *command;
@@ -99,8 +106,6 @@ byte parseCommandAll(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
-
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeAll(bytecode->u.lit.colorFrom);
@@ -120,9 +125,7 @@ byte parseCommandShift(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parseAxis(message, length, position, & axis);
-  skipWhitespace(message, length, position);
   errorCode = parseDirection(message, length, position, & direction);
 
   if (errorCode == 0) cubeShift(axis, direction);
@@ -143,9 +146,7 @@ byte parseCommandSet(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX, & positionY, & positionZ);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeSet( positionX, positionY, positionZ, bytecode->u.lit.colorFrom);
@@ -169,11 +170,8 @@ byte parseCommandLine(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX1, & positionY1, & positionZ1);
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX2, & positionY2, & positionZ2);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeLine( positionX1, positionY1, positionZ1, positionX2, positionY2, positionZ2, bytecode->u.lit.colorFrom);
@@ -198,19 +196,14 @@ byte parseCommandBox(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX1, & positionY1, & positionZ1);
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX2, & positionY2, & positionZ2);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & style);
   if (errorCode) {
     errorCode = 0;
     style = 0;
   }
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorTo);
   if (errorCode) {
     errorCode = 0;
@@ -236,13 +229,9 @@ byte parseCommandSphere(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parsePosition(message, length, position, & positionX1, & positionY1, & positionZ1);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & size);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorTo);
   if (errorCode) {
     errorCode = 0;
@@ -264,7 +253,6 @@ byte parseCommandNext(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeNext(bytecode->u.lit.colorFrom);
@@ -285,11 +273,8 @@ byte parseCommandCopyplane(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parseAxis(message, length, position, & axis);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & offset);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & destination);
 
   if (errorCode == 0) cubeCopyplane(axis, offset, destination);
@@ -311,13 +296,9 @@ byte parseCommandMoveplane(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parseAxis(message, length, position, & axis);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & offset);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & destination);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & rgb);
 
   if (errorCode == 0) cubeMoveplane(axis, offset, destination, rgb);
@@ -337,11 +318,8 @@ byte parseCommandSetplane(
   byte errorCode = 0;
   bytecode->executer = command->executer;
 
-  skipWhitespace(message, length, position);
   errorCode = parseAxis(message, length, position, & axis);
-  skipWhitespace(message, length, position);
   errorCode = parseOffset(message, length, position, & offset);
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeSetplane(axis, offset, bytecode->u.lit.colorFrom);
@@ -360,25 +338,27 @@ byte parseCommandHelp(
   bytecode->executer = command->executer;
 
   if (serial) {
-    serial->println("  *** Available commands ***");
-    serial->println("Entire cube:");
-    serial->println("  all <colour>;                                        (eg: 'all RED;', or 'all ff0000;')");
-    serial->println("  shift <axis> <direction>;                            (eg: 'shift X +;', or 'shift Y -;')");
-    serial->println("Single LED:");
-    serial->println("  set <location> <colour>;                             (eg: 'set 112 GREEN;', or 'set 112 00ff00;')");
-    serial->println("  next <colour>;                                       (eg: 'next BLUE;', or 'next 0000ff;')");
-    serial->println("One axis:");
-    serial->println("  setplane <axis> <offset> <colour>;                   (eg: 'setplane X 2 BLUE;', or 'setplane Y 1 00ff00;')");
-    serial->println("  copyplane <axis> <from offset> <to offset>;          (eg: 'copyplane X 2 1;')");
-    serial->println("  moveplane <axis> <from offset> <to offset> <colour>; (eg: 'move Z 1 3 BLACK;', or 'move X 3 0 GREEN;')");
-    // Commented out due to taking up an additional 18% memory
-    // serial->println("Graphics and shapes:");
-    // serial->println("  line <location1> <location2> <colour>;                     (eg: 'line 000 333 RED;', or 'line 000 333 ff0000;')");
-    // serial->println("  box <location1> <location2> <colour> (<style:0-4:solid/walls only/edges only/walls filled/edges filled>) (<fill>);  (eg: 'box 000 333 GREEN;', or 'box 000 333 00ff00 3 ffffff;')");
-    // serial->println("  sphere <location1> <location2> <colour> (<fill>);          (eg: 'sphere 000 333 BLUE;', or 'sphere 000 333 0000ff ffffff;')");
-    serial->println("Supported colour aliases:");
-    serial->println("  BLACK BLUE GREEN ORANGE PINK PURPLE RED WHITE YELLOW");
-    serial->println("  *** Please see www.freetronics.com/cube for more information ***");
+#ifndef NO_SERIAL_HELP_TEXT
+    serial->println(F("  *** Available commands ***"));
+    serial->println(F("Entire cube:"));
+    serial->println(F("  all <colour>;                                        (eg: 'all RED;', or 'all ff0000;')"));
+    serial->println(F("  shift <axis> <direction>;                            (eg: 'shift X +;', or 'shift Y -;')"));
+    serial->println(F("Single LED:"));
+    serial->println(F("  set <location> <colour>;                             (eg: 'set 112 GREEN;', or 'set 112 00ff00;')"));
+    serial->println(F("  next <colour>;                                       (eg: 'next BLUE;', or 'next 0000ff;')"));
+    serial->println(F("One axis:"));
+    serial->println(F("  setplane <axis> <offset> <colour>;                   (eg: 'setplane X 2 BLUE;', or 'setplane Y 1 00ff00;')"));
+    serial->println(F("  copyplane <axis> <from offset> <to offset>;          (eg: 'copyplane X 2 1;')"));
+    serial->println(F("  moveplane <axis> <from offset> <to offset> <colour>; (eg: 'move Z 1 3 BLACK;', or 'move X 3 0 GREEN;')"));
+    // Commented out due to taking up an additional 2% program storage space
+    // serial->println(F("Graphics and shapes:"));
+    // serial->println(F("  line <location1> <location2> <colour>;                     (eg: 'line 000 333 RED;', or 'line 000 333 ff0000;')"));
+    // serial->println(F("  box <location1> <location2> <colour> (<style:0-4:solid/walls only/edges only/walls filled/edges filled>) (<fill>);  (eg: 'box 000 333 GREEN;', or 'box 000 333 00ff00 3 ffffff;')"));
+    // serial->println(F("  sphere <location1> <location2> <colour> (<fill>);          (eg: 'sphere 000 333 BLUE;', or 'sphere 000 333 0000ff ffffff;')"));
+    serial->println(F("Supported colour aliases:"));
+    serial->println(F("  BLACK BLUE GREEN ORANGE PINK PURPLE RED WHITE YELLOW"));
+#endif
+    serial->println(F("  *** Please see www.freetronics.com/cube for more information ***"));
   }
 
   return(errorCode);
@@ -394,12 +374,14 @@ byte parseRGB(
   byte number;
   byte errorCode = 7;
 
-  // Temporary test of colour alias detection. Nasty, replace with a generalised parser
-  if ((message[*position] == 'B' || message[*position] == 'b')
-      && (message[*position + 1] == 'L' || message[*position + 1] == 'l')
-      && (message[*position + 2] == 'A' || message[*position + 2] == 'a')
-      && (message[*position + 3] == 'C' || message[*position + 3] == 'c')
-      && (message[*position + 4] == 'K' || message[*position + 4] == 'k'))
+  skipWhitespace(message, length, position);
+
+  /* Temporary test of colour alias detection. Nasty, replace with a generalised parser
+   *   - Only test the first and last character of the colour (as they are unique) to 
+   *     minimise program storage space.
+   */
+  if (message[*position] == 'b'
+      && message[*position + 4] == 'k') // BLACK
   {
     *rgb = BLACK;
     (*position) += 5;
@@ -407,10 +389,8 @@ byte parseRGB(
     return(errorCode);
   }
 
-  if ((message[*position] == 'B' || message[*position] == 'b')
-      && (message[*position + 1] == 'L' || message[*position + 1] == 'l')
-      && (message[*position + 2] == 'U' || message[*position + 2] == 'u')
-      && (message[*position + 3] == 'E' || message[*position + 3] == 'e'))
+  if (message[*position] == 'b'
+      && message[*position + 3] == 'e') // BLUE
   {
     *rgb = BLUE;
     (*position) +=4;
@@ -418,11 +398,8 @@ byte parseRGB(
     return(errorCode);
   }
 
-  if ((message[*position] == 'G' || message[*position] == 'g')
-      && (message[*position + 1] == 'R' || message[*position + 1] == 'r')
-      && (message[*position + 2] == 'E' || message[*position + 2] == 'e')
-      && (message[*position + 3] == 'E' || message[*position + 3] == 'e')
-      && (message[*position + 4] == 'N' || message[*position + 4] == 'n'))
+  if (message[*position] == 'g'
+      && message[*position + 4] == 'n') // GREEN
   {
     *rgb = GREEN;
     (*position) += 5;
@@ -430,12 +407,8 @@ byte parseRGB(
     return(errorCode);
   }
 
-  if ((message[*position] == 'O' || message[*position] == 'o')
-      && (message[*position + 1] == 'R' || message[*position + 1] == 'r')
-      && (message[*position + 2] == 'A' || message[*position + 2] == 'a')
-      && (message[*position + 3] == 'N' || message[*position + 3] == 'n')
-      && (message[*position + 4] == 'G' || message[*position + 4] == 'g')
-      && (message[*position + 5] == 'E' || message[*position + 5] == 'e'))
+  if (message[*position] == 'o'
+      && message[*position + 5] == 'e') // ORANGE
   {
     *rgb = ORANGE;
     (*position) += 6;
@@ -443,10 +416,8 @@ byte parseRGB(
     return(errorCode);
   }
 
-  if ((message[*position] == 'P' || message[*position] == 'p')
-      && (message[*position + 1] == 'I' || message[*position + 1] == 'i')
-      && (message[*position + 2] == 'N' || message[*position + 2] == 'n')
-      && (message[*position + 3] == 'K' || message[*position + 3] == 'k'))
+  if (message[*position] == 'p'
+      && message[*position + 3] == 'k') // PINK
   {
     *rgb = PINK;
     (*position) +=4;
@@ -454,12 +425,8 @@ byte parseRGB(
     return(errorCode);
   }
 
-  if ((message[*position] == 'P' || message[*position] == 'p')
-      && (message[*position + 1] == 'U' || message[*position + 1] == 'u')
-      && (message[*position + 2] == 'R' || message[*position + 2] == 'r')
-      && (message[*position + 3] == 'P' || message[*position + 3] == 'p')
-      && (message[*position + 4] == 'L' || message[*position + 4] == 'l')
-      && (message[*position + 5] == 'E' || message[*position + 5] == 'e'))
+  if (message[*position] == 'p'
+      && message[*position + 5] == 'e') // PURPLE
   {
     *rgb = PURPLE;
     (*position) += 6;
@@ -467,21 +434,17 @@ byte parseRGB(
     return(errorCode);
   }
 
-  if ((message[*position] == 'R' || message[*position] == 'r')
-      && (message[*position + 1] == 'E' || message[*position + 1] == 'e')
-      && (message[*position + 2] == 'D' || message[*position + 2] == 'd'))
+  if (message[*position] == 'r'
+      && message[*position + 2] == 'd') // RED
   {
     *rgb = RED;
-    (*position) += 3;;
+    (*position) += 3;
     errorCode = 0;
     return(errorCode);
   }
 
-  if ((message[*position] == 'W' || message[*position] == 'w')
-      && (message[*position + 1] == 'H' || message[*position + 1] == 'h')
-      && (message[*position + 2] == 'I' || message[*position + 2] == 'i')
-      && (message[*position + 3] == 'T' || message[*position + 3] == 't')
-      && (message[*position + 4] == 'E' || message[*position + 4] == 'e'))
+  if (message[*position] == 'w'
+      && message[*position + 4] == 'e') // WHITE
   {
     *rgb = WHITE;
     (*position) += 5;
@@ -489,12 +452,8 @@ byte parseRGB(
     return(errorCode);
   }
 
-  if ((message[*position] == 'Y' || message[*position] == 'y')
-      && (message[*position + 1] == 'E' || message[*position + 1] == 'e')
-      && (message[*position + 2] == 'L' || message[*position + 2] == 'l')
-      && (message[*position + 3] == 'L' || message[*position + 3] == 'l')
-      && (message[*position + 4] == 'O' || message[*position + 4] == 'o')
-      && (message[*position + 5] == 'W' || message[*position + 5] == 'w'))
+  if (message[*position] == 'y'
+      && message[*position + 5] == 'w') // YELLOW
   {
     *rgb = YELLOW;
     (*position) += 6;
@@ -548,6 +507,8 @@ byte parsePosition(
   byte digit;
   byte errorCode = 6;
 
+  skipWhitespace(message, length, position);
+
   if (checkForOffset(message, length, position, & digit)) {
     *positionX = digit;
     (*position) ++;
@@ -576,6 +537,8 @@ byte parseAxis(
   byte digit;
   byte errorCode = 10;
 
+  skipWhitespace(message, length, position);
+
   if (checkForAxis(message, length, position, & digit)) {
     *axis = digit;
     (*position) ++;
@@ -594,6 +557,8 @@ byte parseDirection(
   byte digit;
   byte errorCode = 11;
 
+  skipWhitespace(message, length, position);
+
   if (checkForDirection(message, length, position, & digit)) {
     *direction = digit;
     (*position) ++;
@@ -611,6 +576,8 @@ byte parseOffset(
 
   byte digit;
   byte errorCode = 6;
+
+  skipWhitespace(message, length, position);
 
   if (checkForOffset(message, length, position, & digit)) {
     *offset = digit;
@@ -635,11 +602,6 @@ byte checkForHexadecimal(
       match = 1;
     }
 
-    if (message[*position] >= 'A'  &&  message[*position] <= 'F') {
-      *digit = message[*position] - 'A' + 10;
-      match = 1;
-    }
-
     if (message[*position] >= 'a'  &&  message[*position] <= 'f') {
       *digit = message[*position] - 'a' + 10;
       match = 1;
@@ -658,12 +620,7 @@ byte checkForDirection(
   byte match = 0;
 
   if (*position < length) {
-    if (message[*position] == '+') {
-      *digit = message[*position];
-      match = 1;
-    }
-
-    if (message[*position] == '-') {
+    if (message[*position] == '+' || message[*position] == '-') {
       *digit = message[*position];
       match = 1;
     }
@@ -681,15 +638,15 @@ byte checkForAxis(
   byte match = 0;
 
   if (*position < length) {
-    if (message[*position] == 'X' || message[*position] == 'x') {
+    if (message[*position] == 'x') {
       *digit = X;
       match = 1;
     }
-    if (message[*position] == 'Y' || message[*position] == 'y') {
+    if (message[*position] == 'y') {
       *digit = Y;
       match = 1;
     }
-    if (message[*position] == 'Z' || message[*position] == 'z') {
+    if (message[*position] == 'z') {
       *digit = Z;
       match = 1;
     }
@@ -712,7 +669,7 @@ byte checkForOffset(
       match = 1;
     }
 
-    if (message[*position] == 'H'  ||  message[*position] == 'h') {
+    if (message[*position] == 'h') {
       *digit = -1;
       match = 1;
     }
