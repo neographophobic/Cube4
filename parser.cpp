@@ -641,12 +641,7 @@ byte checkForDirection(
   byte match = 0;
 
   if (*position < length) {
-    if (message[*position] == '+') {
-      *digit = message[*position];
-      match = 1;
-    }
-
-    if (message[*position] == '-') {
+    if (message[*position] == '+' || message[*position] == '-') {
       *digit = message[*position];
       match = 1;
     }
