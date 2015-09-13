@@ -19,6 +19,11 @@
  #include "WProgram.h"
 #endif
 
+// Uncomment the following to disable showing detailed help text via the 'help;' command
+//  - This saves 1K of program storage space, but does not disable the functionality of
+//  - the commands. The link to the website is preserved.
+//#define NO_SERIAL_HELP_TEXT
+
 #include "color.h"
 #include "engine.h"
 

@@ -338,6 +338,7 @@ byte parseCommandHelp(
   bytecode->executer = command->executer;
 
   if (serial) {
+#ifndef NO_SERIAL_HELP_TEXT
     serial->println(F("  *** Available commands ***"));
     serial->println(F("Entire cube:"));
     serial->println(F("  all <colour>;                                        (eg: 'all RED;', or 'all ff0000;')"));
@@ -356,6 +357,7 @@ byte parseCommandHelp(
     // serial->println(F("  sphere <location1> <location2> <colour> (<fill>);          (eg: 'sphere 000 333 BLUE;', or 'sphere 000 333 0000ff ffffff;')"));
     serial->println(F("Supported colour aliases:"));
     serial->println(F("  BLACK BLUE GREEN ORANGE PINK PURPLE RED WHITE YELLOW"));
+#endif
     serial->println(F("  *** Please see www.freetronics.com/cube for more information ***"));
   }
 
