@@ -349,6 +349,38 @@ byte parseCommandSetplane(
   return(errorCode);
 };
 
+byte parseCommandUser(
+  char       *message,
+  byte        length,
+  byte       *position,
+  command_t  *command,
+  bytecode_t *bytecode) {
+
+  byte errorCode = 0;
+  bytecode->executer = command->executer;
+
+  int itemID = 0;
+  
+  while(isDigit(message[*position])) {
+	// build the itemID that the user wants to do
+	//   - multiple existing number by 10 to increase the signifiant component
+	//   - then add the current character, converting it from ASCII to a int
+  	itemID = itemID * 10 + message[*position] - '0';
+    (*position) ++;
+  }
+
+  skipWhitespace(message, length, position);
+  errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
+
+  if( 0 != fpAction ) {
+    (*fpAction)(itemID, bytecode->u.lit.colorFrom);
+  } else {
+  	errorCode = 12;
+  }
+
+  return(errorCode);
+};
+
 byte parseCommandHelp(
   char       *message,
   byte        length,
