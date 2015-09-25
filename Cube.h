@@ -108,4 +108,6 @@ extern void cubeMoveplane(byte axis, byte position, byte destination, rgb_t rgb_
 extern void cubeSetplane(byte axis, byte position, rgb_t rgb);
 extern byte parser(char *message, byte messageLength, bytecode_t *bytecode);
 extern void serialHandler(void);
+extern void setDelegate(void (*fp)(int, rgb_t));
+
 #endif

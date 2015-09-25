@@ -68,4 +68,6 @@ static const char *errorCodes[] = {
   "Expected '+' or '-'"        // 11
 };
  */
+ 
+void (*fpAction)(int, rgb_t);
 #endif
