@@ -349,7 +349,6 @@ byte parseCommandUser(
     (*position) ++;
   }
 
-  skipWhitespace(message, length, position);
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if( 0 != fpAction ) {
