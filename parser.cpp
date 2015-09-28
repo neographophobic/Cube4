@@ -55,6 +55,8 @@ byte parser(
 	  i++;
   }
 
+  userMode = false; // Assume we aren't running a user defined function
+  
   skipWhitespace(message, length, & position);
 
   command_t *command;
@@ -323,6 +325,39 @@ byte parseCommandSetplane(
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if (errorCode == 0) cubeSetplane(axis, offset, bytecode->u.lit.colorFrom);
+
+  return(errorCode);
+};
+
+byte parseCommandUser(
+  char       *message,
+  byte        length,
+  byte       *position,
+  command_t  *command,
+  bytecode_t *bytecode) {
+
+  byte errorCode = 0;
+  bytecode->executer = command->executer;
+
+  int itemID = 0;
+  
+  while(isDigit(message[*position])) {
+	// build the itemID that the user wants to do
+	//   - multiple existing number by 10 to increase the signifiant component
+	//   - then add the current character, converting it from ASCII to a int
+  	itemID = itemID * 10 + message[*position] - '0';
+    (*position) ++;
+  }
+
+  skipWhitespace(message, length, position);
+  errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
+
+  if( 0 != fpAction ) {
+  	userMode = true;
+    (*fpAction)(itemID, bytecode->u.lit.colorFrom);
+  } else {
+  	errorCode = 12;
+  }
 
   return(errorCode);
 };
@@ -721,5 +756,15 @@ boolean stringDelimiter(
   char character) {
 
   return(character == NUL  ||  character == SPACE  ||  character == RBRAC);
+}
+
+void setDelegate(void (*fp)(int, rgb_t))
+{
+  fpAction = fp;
+}
+
+boolean Cube::inUserMode()
+{
+  return userMode;
 }
 #endif

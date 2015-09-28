@@ -34,6 +34,7 @@ byte parseCommandSphere(char *message, byte length, byte *position, command_t *c
 byte parseCommandSetplane(char *message, byte length, byte *position, command_t *command, bytecode_t *bytecode);
 byte parseCommandCopyplane(char *message, byte length, byte *position, command_t *command, bytecode_t *bytecode);
 byte parseCommandMoveplane(char *message, byte length, byte *position, command_t *command, bytecode_t *bytecode);
+byte parseCommandUser(char *message, byte length, byte *position, command_t *command, bytecode_t *bytecode);
 byte parseCommandHelp(char *message, byte length, byte *position, command_t *command, bytecode_t *bytecode);
 
 command_t commands[] = {
@@ -47,6 +48,7 @@ command_t commands[] = {
   "setplane",  parseCommandSetplane,  executeNop,
   "copyplane", parseCommandCopyplane, executeNop,
   "moveplane", parseCommandMoveplane, executeNop,
+  "user",      parseCommandUser,      executeNop,
   "help",      parseCommandHelp,      executeNop
 };
 
@@ -65,7 +67,12 @@ static const char *errorCodes[] = {
   "Invalid seq command",       // 8
   "Sequence memory full",      // 9
   "Axis designator expected",  // 10
-  "Expected '+' or '-'"        // 11
+  "Expected '+' or '-'",       // 11
+  "User function not defined"  // 12
 };
  */
+ 
+void (*fpAction)(int, rgb_t);
+bool userMode = false;  // Set to true when running a user defined function via a serial command
+
 #endif
