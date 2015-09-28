@@ -73,4 +73,6 @@ static const char *errorCodes[] = {
  */
  
 void (*fpAction)(int, rgb_t);
+bool userMode = false;  // Set to true when running a user defined function via a serial command
+
 #endif

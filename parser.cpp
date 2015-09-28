@@ -48,6 +48,8 @@ byte parser(
   byte errorCode = 0;
   byte position = 0;
 
+  userMode = false; // Assume we aren't running a user defined function
+  
   skipWhitespace(message, length, & position);
 
   command_t *command;
@@ -373,6 +375,7 @@ byte parseCommandUser(
   errorCode = parseRGB(message, length, position, & bytecode->u.lit.colorFrom);
 
   if( 0 != fpAction ) {
+  	userMode = true;
     (*fpAction)(itemID, bytecode->u.lit.colorFrom);
   } else {
   	errorCode = 12;
@@ -801,5 +804,10 @@ boolean stringDelimiter(
 void setDelegate(void (*fp)(int, rgb_t))
 {
   fpAction = fp;
+}
+
+boolean Cube::inUserMode()
+{
+  return userMode;
 }
 #endif
