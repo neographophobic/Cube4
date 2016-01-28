@@ -1,5 +1,6 @@
 Cube	KEYWORD1
 hasReceivedSerialCommand	KEYWORD2
+setDelegate	KEYWORD2
 inUserMode	KEYWORD2
 all	KEYWORD2
 set	KEYWORD2

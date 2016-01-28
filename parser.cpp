@@ -757,7 +757,7 @@ boolean stringDelimiter(
   return(character == NUL  ||  character == SPACE  ||  character == RBRAC);
 }
 
-void setDelegate(void (*fp)(int, rgb_t))
+void Cube::setDelegate(void (*fp)(int, rgb_t))
 {
   fpAction = fp;
 }
