@@ -410,7 +410,7 @@ byte parseCommandHelp(
     // serial->println("Graphics and shapes:");
     // serial->println("  line <location1> <location2> <colour>;                     (eg: 'line 000 333 RED;', or 'line 000 333 ff0000;')");
     // serial->println("  box <location1> <location2> <colour> (<style:0-4:solid/walls only/edges only/walls filled/edges filled>) (<fill>);  (eg: 'box 000 333 GREEN;', or 'box 000 333 00ff00 3 ffffff;')");
-    // serial->println("  sphere <location1> <location2> <colour> (<fill>);          (eg: 'sphere 000 333 BLUE;', or 'sphere 000 333 0000ff ffffff;')");
+    // serial->println("  sphere <centre location> <size> <colour> (<fill>);          (eg: 'sphere 111 3 BLUE;', or 'sphere 111 4 0000ff ffffff;')");
     serial->println("Supported colour aliases:");
     serial->println("  BLACK BLUE GREEN ORANGE PINK PURPLE RED WHITE YELLOW");
     serial->println("  *** Please see www.freetronics.com/cube for more information ***");
