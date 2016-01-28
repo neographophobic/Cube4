@@ -1,6 +1,6 @@
 /*
  * File:    UserDefinedFunctions.ino
- * Version: 1.0
+ * Version: 1.1
  * Author:  Adam Reed (adam@secretcode.ninja)
  * License: GPLv3
  * 
@@ -9,13 +9,47 @@
  *          (jon@freetronics.com)
  */
 
+// Include required libraries
 #include "SPI.h"
 #include "Cube.h"
 
+// Include header files for animations
+#include "ColourFader.h"
+#include "RandomColours.h"
+#include "Wave.h"
+#include "ZigZag.h"
+
+// Create an instance of the cube class
 Cube cube;
 
-byte action = 0; // Track which user defined function to run
-rgb_t theColour; // Track the colour to use with user defined function
+// Create an instance of the ColourFader class,
+// with a delay of 10 milliseconds between colour
+// changes
+ColourFader colourfader(cube, 10);
+
+// Create an instance of the RandomColours class,
+// with a delay of 2 milliseconds between settings
+// the next random LED to a random colour
+RandomColours randomcolours(cube, 2);
+
+// Create an instance of the Wave class, with a 
+// delay of 100 milliseconds between frames in
+// the animation
+Wave wave(cube, 100);
+
+// Create an instance of the ZigZag class, with a 
+// delay of 300 milliseconds between frames in
+// the animation
+ZigZag zigzag(cube, 300);
+
+// Track which user defined function to run
+byte action = 0; 
+
+// Track the colour to use with user defined function
+rgb_t theColour;
+
+// Set a default colour
+rgb_t defaultColour = BLUE;
 
 void setup(void) {
   // Serial port options for control of the Cube using serial commands are:
@@ -28,265 +62,6 @@ void setup(void) {
   // called if the user uses the 'user ### colour;' serial command line
   // instruction
   setDelegate(userFunctionHandler);
-}
-
-void loop(void) {
-  if (!cube.hasReceivedSerialCommand())
-  {
-    // User hasn't sent a serial command, so just flash a 
-    // LED like a blinking cursor waiting for input
-    cube.set(0, 0, 0, WHITE);
-    delay(200);
-    cube.set(0, 0, 0, BLACK);
-    delay(300);
-  } else {
-    // A serial command has been received
-    if (cube.inUserMode())
-    {
-      // The last processed serial command was for a user
-      // defined function, so run the action based on the
-      // users input
-      switch (action)
-      {
-        case 1:
-          zigzag();
-          break;
-        case 2:
-          randomPastels();
-          break;
-        case 3:
-          randomColours();
-          break;
-        case 4:
-          randomPrimaries();
-          break;
-        case 5:
-          faceSweep();
-          break;
-      }
-    }    
-  }
-}
-
-void zigzag()
-{
-  // Zig Zag style pattern
-
-  // The Zig
-  cube.all(BLACK);
-  cube.set(0,0,0, theColour);
-  cube.set(2,0,0, theColour);
-  cube.set(1,1,0, theColour);
-  cube.set(3,1,0, theColour);
-  cube.set(0,2,0, theColour);
-  cube.set(2,2,0, theColour);
-  cube.set(1,3,0, theColour);
-  cube.set(3,3,0, theColour);
-  cube.copyplane(Z, 0, 2);    
-  cube.set(1,0,1, theColour);
-  cube.set(3,0,1, theColour);
-  cube.set(0,1,1, theColour);
-  cube.set(2,1,1, theColour);
-  cube.set(1,2,1, theColour);
-  cube.set(3,2,1, theColour);
-  cube.set(0,3,1, theColour);
-  cube.set(2,3,1, theColour);
-  cube.copyplane(Z, 1, 3);  
-  delay(300);
-
-  // The Zag
-  cube.all(BLACK);
-  cube.set(1,0,0, theColour);
-  cube.set(3,0,0, theColour);
-  cube.set(0,1,0, theColour);
-  cube.set(2,1,0, theColour);
-  cube.set(1,2,0, theColour);
-  cube.set(3,2,0, theColour);
-  cube.set(0,3,0, theColour);
-  cube.set(2,3,0, theColour);
-  cube.copyplane(Z, 0, 2);    
-  cube.set(0,0,1, theColour);
-  cube.set(2,0,1, theColour);
-  cube.set(1,1,1, theColour);
-  cube.set(3,1,1, theColour);
-  cube.set(0,2,1, theColour);
-  cube.set(2,2,1, theColour);
-  cube.set(1,3,1, theColour);
-  cube.set(3,3,1, theColour);
-  cube.copyplane(Z, 1, 3);   
-  delay(300);
-}
-
-void randomPastels()
-{
-  // Function by Jonathan Oxer (jon@freetronics.com), from 
-  // the RandomPastels example sketch
-  cube.set(random(4), random(4), random(4), RGB(random(255), random(255), random(255)));
-  delay(2);
-}
-
-void randomColours()
-{
-  // Function by Jonathan Oxer (jon@freetronics.com), from 
-  // the RandomColours example sketch
-  byte xPos;
-  byte yPos;
-  byte zPos;
-  byte rr;
-  byte gg;
-  byte bb;
-
-  xPos = random(4);
-  yPos = random(4);
-  zPos = random(4);
-  rr = random(0, 2) * 255;
-  gg = random(0, 2) * 255;
-  bb = random(0, 2) * 255;
-
-
-  cube.set(xPos, yPos, zPos, RGB(rr, gg, bb));
-  delay(2);
-}
-
-void randomPrimaries()
-{
-  // Function by Jonathan Oxer (jon@freetronics.com), from 
-  // the RandomPrimaries example sketch
-  rgb_t colours[3] = {RED, GREEN, BLUE};
-  byte xPos;
-  byte yPos;
-  byte zPos;
-
-  xPos = random(0, 4);
-  yPos = random(0, 4);
-  zPos = random(0, 4);
-  byte i = random(0, 3);
-
-  cube.set(xPos, yPos, zPos, colours[i]);
-  delay(2);
-}
-
-void faceSweep() 
-{
-  cube.all(BLACK);
-  // Move 1
-  cube.setplane(Y, 0, BLUE);
-  delay(100);
-
-  // Move 2
-  cube.set(0,0,0, BLACK);
-  cube.set(1,0,0, BLACK);
-  cube.set(2,0,0, BLACK);
-  cube.set(3,0,0, BLACK);
-  cube.set(0,1,0, BLUE);
-  cube.set(1,1,0, BLUE);
-  cube.set(2,1,0, BLUE);
-  cube.set(3,1,0, BLUE);
-  delay(100);
-
-  // Move 3
-  cube.set(0,1,0, BLACK);
-  cube.set(1,1,0, BLACK);
-  cube.set(2,1,0, BLACK);
-  cube.set(3,1,0, BLACK);
-  cube.set(0,0,1, BLACK);
-  cube.set(1,0,1, BLACK);
-  cube.set(2,0,1, BLACK);
-  cube.set(3,0,1, BLACK);
-  cube.set(0,2,0, BLUE);
-  cube.set(1,2,0, BLUE);
-  cube.set(2,2,0, BLUE);
-  cube.set(3,2,0, BLUE);
-  cube.set(0,1,1, BLUE);
-  cube.set(1,1,1, BLUE);
-  cube.set(2,1,1, BLUE);
-  cube.set(3,1,1, BLUE);
-  delay(100);
-
-  // Move 4
-  cube.set(0,2,0, BLACK);
-  cube.set(1,2,0, BLACK);
-  cube.set(2,2,0, BLACK);
-  cube.set(3,2,0, BLACK);
-  cube.set(0,1,1, BLACK);
-  cube.set(1,1,1, BLACK);
-  cube.set(2,1,1, BLACK);
-  cube.set(3,1,1, BLACK);
-  cube.set(0,0,2, BLACK);
-  cube.set(1,0,2, BLACK);
-  cube.set(2,0,2, BLACK);
-  cube.set(3,0,2, BLACK);
-  cube.set(0,3,0, BLUE);
-  cube.set(1,3,0, BLUE);
-  cube.set(2,3,0, BLUE);
-  cube.set(3,3,0, BLUE);
-  cube.set(0,2,1, BLUE);
-  cube.set(1,2,1, BLUE);
-  cube.set(2,2,1, BLUE);
-  cube.set(3,2,1, BLUE);
-  cube.set(0,1,2, BLUE);
-  cube.set(1,1,2, BLUE);
-  cube.set(2,1,2, BLUE);
-  cube.set(3,1,2, BLUE);
-  delay(100);
-
-  // Move 5
-  cube.set(0,3,0, BLACK);
-  cube.set(1,3,0, BLACK);
-  cube.set(2,3,0, BLACK);
-  cube.set(3,3,0, BLACK);
-  cube.set(0,2,1, BLACK);
-  cube.set(1,2,1, BLACK);
-  cube.set(2,2,1, BLACK);
-  cube.set(3,2,1, BLACK);
-  cube.set(0,1,2, BLACK);
-  cube.set(1,1,2, BLACK);
-  cube.set(2,1,2, BLACK);
-  cube.set(3,1,2, BLACK);
-  cube.set(0,1,3, BLUE); 
-  cube.set(1,1,3, BLUE); 
-  cube.set(2,1,3, BLUE); 
-  cube.set(3,1,3, BLUE); 
-  cube.set(0,2,2, BLUE);
-  cube.set(1,2,2, BLUE);
-  cube.set(2,2,2, BLUE);
-  cube.set(3,2,2, BLUE);
-  cube.set(0,3,1, BLUE);
-  cube.set(1,3,1, BLUE);
-  cube.set(2,3,1, BLUE);
-  cube.set(3,3,1, BLUE);
-  delay(100);
-
-  // Move 6 
-  cube.set(0,2,2, BLACK);
-  cube.set(1,2,2, BLACK);
-  cube.set(2,2,2, BLACK);
-  cube.set(3,2,2, BLACK);
-  cube.set(0,3,1, BLACK);
-  cube.set(1,3,1, BLACK);
-  cube.set(2,3,1, BLACK);
-  cube.set(3,3,1, BLACK);
-  cube.set(0,2,3, BLUE);
-  cube.set(1,2,3, BLUE);
-  cube.set(2,2,3, BLUE);
-  cube.set(3,2,3, BLUE);
-  cube.set(0,3,2, BLUE);
-  cube.set(1,3,2, BLUE);
-  cube.set(2,3,2, BLUE);
-  cube.set(3,3,2, BLUE);
-  delay(100);
-
-  // Move 7
-  cube.set(0,3,2, BLACK);
-  cube.set(1,3,2, BLACK);
-  cube.set(2,3,2, BLACK);
-  cube.set(3,3,2, BLACK);
-  cube.set(0,3,3, BLUE);
-  cube.set(1,3,3, BLUE);
-  cube.set(2,3,3, BLUE);
-  cube.set(3,3,3, BLUE);
- 
-  delay(500);
 }
 
 void userFunctionHandler(int itemID, rgb_t selectedColour)
@@ -309,7 +84,7 @@ void userFunctionHandler(int itemID, rgb_t selectedColour)
   switch (action)
   {
     case 1:
-      serial->println("ZigZag");
+      serial->println("Colour Fader");
       break;
     case 2:
       serial->println("Random Pastels");
@@ -321,7 +96,58 @@ void userFunctionHandler(int itemID, rgb_t selectedColour)
       serial->println("Random Primaries");
       break;
     case 5:
-      serial->println("Face Sweep");
+      serial->println("Wave");
+      break;
+    case 6:
+      serial->println("ZigZag");
       break;
   }
 }
+
+void loop(void) {
+  if (!cube.hasReceivedSerialCommand())
+  {
+    // User hasn't sent a serial command, so just flash a 
+    // LED like a blinking cursor waiting for input
+    cube.set(0, 0, 0, WHITE);
+    delay(200);
+    cube.set(0, 0, 0, BLACK);
+    delay(300);
+  } else {
+    // A serial command has been received
+    if (cube.inUserMode())
+    {
+      // Check the colour that was set
+      if (theColour.color[0] == 0 && theColour.color[1] == 0 && theColour.color[2] == 0) {
+        // There was no user provided colour, so set it to the default
+        theColour = defaultColour;
+      }
+
+      // The last processed serial command was for a user
+      // defined function, so run the action based on the
+      // users input
+      switch (action)
+      {
+        case 1:
+          colourfader.update();
+          break;
+        case 2:
+          randomcolours.pastels();
+          break;
+        case 3:
+          randomcolours.allColours();
+          break;
+        case 4:
+          randomcolours.primary();
+          break;
+        case 5:
+          wave.update(theColour);
+          break;
+        case 6:
+          zigzag.update(theColour);
+          break;
+      }
+    }    
+  }
+}
+
