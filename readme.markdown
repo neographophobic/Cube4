@@ -155,6 +155,30 @@ Returns `true` if the cube has received a command via the serial interface, othe
 
 Prints a guide to using most of the above commands to the serial console.
 
+## User Defined Functions for use via Serial Interface
+The serial interface has had a `user` command added to it to allow user specified functions to be executed. This means that multiple animations could be stored within the sketch, and a specific one executed on a command via the serial interface.
+
+> When programming animations that include the `delay();` function, the cube will not respond to new serial instructions until after the delay is finished. The included example `UserDefinedFunction.ino` and associated classes have been programmed in a way to avoid this using a concept called a state machine.
+
+* Serial: `user # colour;`
+
+This tells the cube to run the user defined function that corresponds to `#` (identified by an integer) with the optional `colour`.
+
+### `cube.setDelegate(function)`
+To utilise the user defined function support, you need to create a function that responds to the user input, and then tell the cube which function should be called when the user asks for a user defined function via the serial interface.
+
+In the `setup` part of the sketch, after `cube.begin();` make a call to `cube.setDelegate(function);` where `function` is the name of a function that you have defined within the sketch. In this example we will use `userFunctionHandler`.
+
+### `void userFunctionHandler(int itemID, rgb_t selectedColour)`
+This is the function that the library calls. It parses the `user` command and gets the itemID, and colour if provided.
+
+You should store both of these in global variables that can be accessed from the run `loop` of the sketch.
+
+### inUserMode
+Sketch: `cube.inUserMode();`
+
+Returns `true` if the last received command from the serial interface was `user # colour;`.
+
 ## Examples
 Various example sketches are included within this library. The can be found in the `examples` directory, or from within the Arduino IDE at "File" -> "Examples" -> "Cube4".
 
