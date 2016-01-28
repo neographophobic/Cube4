@@ -388,7 +388,7 @@ byte parseCommandHelp(
     // serial->println(F("Graphics and shapes:"));
     // serial->println(F("  line <location1> <location2> <colour>;                     (eg: 'line 000 333 RED;', or 'line 000 333 ff0000;')"));
     // serial->println(F("  box <location1> <location2> <colour> (<style:0-4:solid/walls only/edges only/walls filled/edges filled>) (<fill>);  (eg: 'box 000 333 GREEN;', or 'box 000 333 00ff00 3 ffffff;')"));
-    // serial->println(F("  sphere <location1> <location2> <colour> (<fill>);          (eg: 'sphere 000 333 BLUE;', or 'sphere 000 333 0000ff ffffff;')"));
+    // serial->println(F("  sphere <centre location> <size> <colour> (<fill>);          (eg: 'sphere 111 3 BLUE;', or 'sphere 111 4 0000ff ffffff;')"));
     serial->println(F("Supported colour aliases:"));
     serial->println(F("  BLACK BLUE GREEN ORANGE PINK PURPLE RED WHITE YELLOW"));
 #endif
