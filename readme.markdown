@@ -1,6 +1,6 @@
-# Cube
+# Cube4
 
-This library is for the Freetronics [4x4x4 RGB LED Kit](http://www.freetronics.com.au/products/cube4-4x4x4-rgb-led-cube).
+This library is for the Freetronics [4x4x4 RGB LED Kit](http://www.freetronics.com.au/products/cube4-4x4x4-rgb-led-cube). It has been forked from the [original library](https://github.com/freetronics/Cube4) to add support for user defined functions, improve the documentation, and to use less memory.
 
 To install the library, click on the "Download ZIP" button, and then in the Arduino IDE (v1.6 or later), select "Sketch" -> "Include Library" -> "Add .ZIP Library", then select the downloaded zip file.
 
