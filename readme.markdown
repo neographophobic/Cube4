@@ -42,15 +42,15 @@ The cube uses RGB colour values. When a colour value is required, you can provid
 
 Additionally a number of colours are predefined, and can be used by name. These colours are listed in `color.h` and are as follows:-
 
-* Black (Off)
-* Blue
-* Green
-* Orange
-* Pink
-* Purple
-* Red
-* White
-* Yellow
+* BLACK (Off)
+* BLUE
+* GREEN
+* ORANGE
+* PINK
+* PURPLE
+* RED
+* WHITE
+* YELLOW
 
 ## API
 The cube can be instructed to display different patterns via the API. This can either be done via commands issued within a sketch, or if enabled, via a serial interface. Please ensure that the cube has been properly initialised with `cube.begin(options);` as shown above in the simple sketch.
